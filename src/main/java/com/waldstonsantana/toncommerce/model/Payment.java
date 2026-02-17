@@ -1,7 +1,6 @@
 package com.waldstonsantana.toncommerce.model;
 
 
-import com.waldstonsantana.toncommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +10,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "payments")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Order {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,13 +23,9 @@ public class Order {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant moment;
 
-    private OrderStatus status;
+    @OneToOne
+    @MapsId
+    private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private User client;
-
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment;
 
 }
