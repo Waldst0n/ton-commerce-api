@@ -19,7 +19,7 @@ public class CategoryController {
 
     private final CategoryService service;
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<CategoryResponseDTO>> findAll() {
         List<CategoryResponseDTO> categories = service.findAll();
         return ResponseEntity.ok().body(categories);
@@ -33,7 +33,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(category);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryRequestDTO data) {
         CategoryResponseDTO categoryResponseDTO = service.create(data);
 
