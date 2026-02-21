@@ -1,5 +1,6 @@
 package com.waldstonsantana.toncommerce.services;
 
+import com.waldstonsantana.toncommerce.DTOs.CategoryRequestDTO;
 import com.waldstonsantana.toncommerce.DTOs.CategoryResponseDTO;
 import com.waldstonsantana.toncommerce.model.Category;
 import com.waldstonsantana.toncommerce.model.Product;
@@ -39,6 +40,14 @@ public class CategoryService {
         Category category = repository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
         List<UUID> productIds = category.getProducts().stream().map(product -> product.getId()).toList();
         return  new CategoryResponseDTO(category.getId(), category.getName(), productIds);
+    }
+
+    public CategoryResponseDTO create(CategoryRequestDTO data) {
+
+        Category category = new Category();
+        category.setName(data.name());
+        category = repository.save(category);
+        return new CategoryResponseDTO(category.getId(), category.getName(), category.getProducts().stream().map(product -> product.getId()).toList());
     }
 
 
