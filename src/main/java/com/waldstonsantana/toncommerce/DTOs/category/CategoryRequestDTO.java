@@ -1,6 +1,5 @@
-package com.waldstonsantana.toncommerce.DTOs;
+package com.waldstonsantana.toncommerce.DTOs.category;
 
-import com.waldstonsantana.toncommerce.model.Product;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;

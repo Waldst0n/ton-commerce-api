@@ -1,4 +1,4 @@
-package com.waldstonsantana.toncommerce.DTOs;
+package com.waldstonsantana.toncommerce.DTOs.category;
 
 import java.util.List;
 import java.util.UUID;

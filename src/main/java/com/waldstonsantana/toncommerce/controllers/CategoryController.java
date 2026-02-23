@@ -1,7 +1,7 @@
 package com.waldstonsantana.toncommerce.controllers;
 
-import com.waldstonsantana.toncommerce.DTOs.CategoryRequestDTO;
-import com.waldstonsantana.toncommerce.DTOs.CategoryResponseDTO;
+import com.waldstonsantana.toncommerce.DTOs.category.CategoryRequestDTO;
+import com.waldstonsantana.toncommerce.DTOs.category.CategoryResponseDTO;
 import com.waldstonsantana.toncommerce.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

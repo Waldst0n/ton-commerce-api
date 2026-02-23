@@ -1,7 +1,7 @@
 package com.waldstonsantana.toncommerce.services;
 
-import com.waldstonsantana.toncommerce.DTOs.CategoryRequestDTO;
-import com.waldstonsantana.toncommerce.DTOs.CategoryResponseDTO;
+import com.waldstonsantana.toncommerce.DTOs.category.CategoryRequestDTO;
+import com.waldstonsantana.toncommerce.DTOs.category.CategoryResponseDTO;
 import com.waldstonsantana.toncommerce.model.Category;
 import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.repositories.CategoryRepository;
