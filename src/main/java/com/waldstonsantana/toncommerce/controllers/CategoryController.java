@@ -39,5 +39,12 @@ public class CategoryController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody CategoryRequestDTO data) {
+        CategoryResponseDTO categoryResponseDTO = service.update(id, data);
+
+        return ResponseEntity.ok(categoryResponseDTO);
+    }
 }
 
