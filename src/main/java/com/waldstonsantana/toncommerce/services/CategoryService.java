@@ -63,9 +63,17 @@ public class CategoryService {
         return new CategoryResponseDTO(category.getId(), category.getName(), category.getProducts().stream().map(p -> p.getId()).toList());
     }
 
+    @Transactional
+    public void delete(UUID id) {
+        Category category = findCategoryById(id);
+        repository.delete(category);
+    }
+
+    @Transactional(readOnly = true)
     private Category findCategoryById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
     }
+
 
 
 }
