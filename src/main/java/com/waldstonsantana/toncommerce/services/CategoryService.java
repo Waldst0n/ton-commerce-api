@@ -6,6 +6,8 @@ import com.waldstonsantana.toncommerce.model.Category;
 import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,23 +21,22 @@ public class CategoryService {
     private final CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public List<CategoryResponseDTO> findAll() {
-        List<Category> categories = repository.findAll();
+    public Page<CategoryResponseDTO> findAll(Pageable pageable) { // <-- 1. Mude o retorno para Page<DTO>
+        Page<Category> categories = repository.findAll(pageable);
 
-        return categories.stream()
-                .map(category -> {
-                    List<UUID> productIds = category.getProducts()
-                            .stream()
-                            .map(Product::getId)
-                            .toList();
+        // 2. Use o .map() direto do objeto Page (sem usar o .stream() nem o .toList())
+        return categories.map(category -> {
+            List<UUID> productIds = category.getProducts()
+                    .stream()
+                    .map(Product::getId)
+                    .toList();
 
-                    return new CategoryResponseDTO(
-                            category.getId(),
-                            category.getName(),
-                            productIds
-                    );
-                })
-                .toList();
+            return new CategoryResponseDTO(
+                    category.getId(),
+                    category.getName(),
+                    productIds
+            );
+        });
     }
 
     @Transactional(readOnly = true)

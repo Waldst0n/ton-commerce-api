@@ -5,6 +5,8 @@ import com.waldstonsantana.toncommerce.DTOs.category.CategoryResponseDTO;
 import com.waldstonsantana.toncommerce.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,8 @@ public class CategoryController {
     private final CategoryService service;
 
     @GetMapping()
-    public ResponseEntity<List<CategoryResponseDTO>> findAll() {
-        List<CategoryResponseDTO> categories = service.findAll();
+    public ResponseEntity<Page<CategoryResponseDTO>> findAll(Pageable pageable) {
+        Page<CategoryResponseDTO> categories = service.findAll(pageable);
         return ResponseEntity.ok().body(categories);
     }
 
