@@ -8,9 +8,12 @@ import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.repositories.CategoryRepository;
 import com.waldstonsantana.toncommerce.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,7 +25,42 @@ public class ProductService {
 
     private final CategoryRepository categoryRepository;
 
-    @Transactional // Garante a integridade da transação com o banco
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDto> findAll(Pageable pageable) {
+        Page<Product> productsPaginated = repository.findAll(pageable);
+
+        return productsPaginated.map(p -> {
+            List<UUID> categoriesIds = p.getCategories()
+                    .stream()
+                    .map(Category::getId)
+                    .toList();
+
+            return new ProductResponseDto(
+                    p.getId(),
+                    p.getName(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getImgUrl(),
+                    categoriesIds
+            );
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponseDto findById(UUID id) {
+        Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+
+        return  new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getImgUrl(),
+                product.getCategories().stream().map(category -> category.getId()).toList());
+    }
+
+    @Transactional
     public ProductResponseDto create(ProductRequestDTO data) {
         Product newProduct =  new Product();
         newProduct.setName(data.name());
@@ -47,6 +85,38 @@ public class ProductService {
                 newProduct.getImgUrl(),
                 newProduct.getCategories().stream().map(category -> category.getId()).toList()
         );
+    }
+
+    @Transactional
+    public ProductResponseDto update(UUID id, ProductRequestDTO data) {
+        Product product = findProductById(id);
+        product.setName(data.name());
+        product.setDescription(data.description());
+        product.setImgUrl(data.imgUrl());
+        product.setPrice(data.price());
+
+        product = repository.save(product);
+
+        return new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getImgUrl(),
+                product.getCategories()
+                        .stream()
+                        .map(c -> c.getId()).toList());
+    }
+
+    @Transactional(readOnly = true)
+    private Product findProductById(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        Product product = findProductById(id);
+        repository.delete(product);
     }
 
 

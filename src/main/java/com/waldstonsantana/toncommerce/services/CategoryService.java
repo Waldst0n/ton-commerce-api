@@ -24,7 +24,6 @@ public class CategoryService {
     public Page<CategoryResponseDTO> findAll(Pageable pageable) { // <-- 1. Mude o retorno para Page<DTO>
         Page<Category> categories = repository.findAll(pageable);
 
-        // 2. Use o .map() direto do objeto Page (sem usar o .stream() nem o .toList())
         return categories.map(category -> {
             List<UUID> productIds = category.getProducts()
                     .stream()
