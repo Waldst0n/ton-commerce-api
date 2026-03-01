@@ -3,6 +3,7 @@ package com.waldstonsantana.toncommerce.services;
 
 import com.waldstonsantana.toncommerce.DTOs.product.ProductRequestDTO;
 import com.waldstonsantana.toncommerce.DTOs.product.ProductResponseDto;
+import com.waldstonsantana.toncommerce.exception.ProductNotFoundException;
 import com.waldstonsantana.toncommerce.model.Category;
 import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.repositories.CategoryRepository;
@@ -49,7 +50,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponseDto findById(UUID id) {
-        Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+        Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Produto não encontrado."));
 
         return  new ProductResponseDto(
                 product.getId(),
@@ -110,7 +111,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     private Product findProductById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+        return repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Produto não encontrado."));
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package com.waldstonsantana.toncommerce.services;
 
 import com.waldstonsantana.toncommerce.DTOs.category.CategoryRequestDTO;
 import com.waldstonsantana.toncommerce.DTOs.category.CategoryResponseDTO;
+import com.waldstonsantana.toncommerce.exception.CategoryNotFoundException;
 import com.waldstonsantana.toncommerce.model.Category;
 import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.repositories.CategoryRepository;
@@ -21,7 +22,7 @@ public class CategoryService {
     private final CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<CategoryResponseDTO> findAll(Pageable pageable) { // <-- 1. Mude o retorno para Page<DTO>
+    public Page<CategoryResponseDTO> findAll(Pageable pageable) {
         Page<Category> categories = repository.findAll(pageable);
 
         return categories.map(category -> {
@@ -40,7 +41,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryResponseDTO findById(UUID id) {
-        Category category = repository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+        Category category = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
         List<UUID> productIds = category.getProducts().stream().map(product -> product.getId()).toList();
         return  new CategoryResponseDTO(category.getId(), category.getName(), productIds);
     }
@@ -71,7 +72,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     private Category findCategoryById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
 
