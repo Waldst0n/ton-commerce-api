@@ -2,6 +2,7 @@ package com.waldstonsantana.toncommerce.DTOs.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ public record UserRequestDTO(
         String name,
 
         @Email(message = "Digite um email válido")
+        @NotBlank(message = "O campo email é obrigatório")
         String email,
 
         String phone,

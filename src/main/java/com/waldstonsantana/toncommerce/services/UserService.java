@@ -2,8 +2,8 @@ package com.waldstonsantana.toncommerce.services;
 
 import com.waldstonsantana.toncommerce.DTOs.user.UserRequestDTO;
 import com.waldstonsantana.toncommerce.DTOs.user.UserResponseDTO;
+import com.waldstonsantana.toncommerce.exception.UserNotFoundException;
 import com.waldstonsantana.toncommerce.model.Order;
-import com.waldstonsantana.toncommerce.model.Product;
 import com.waldstonsantana.toncommerce.model.User;
 import com.waldstonsantana.toncommerce.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public UserResponseDTO findById(UUID id) {
-        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        User user = findUserById(id);
 
         return new UserResponseDTO(
                 user.getId(),
@@ -77,6 +77,38 @@ public class UserService {
 
         );
     };
+
+    @Transactional
+    public UserResponseDTO update(UUID id, UserRequestDTO data) {
+
+        User user = findUserById(id);
+        user.setName(data.name());
+        user.setEmail(data.email());
+        user.setPhone(data.phone());
+        user.setBirthDate(data.birthDate());
+
+        user = repository.save(user);
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getBirthDate(),
+                user.getOrders().stream().map(o -> o.getId()).toList()
+        );
+
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        User user = findUserById(id);
+        repository.delete(user);
+    }
+
+    private User findUserById(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+    }
 
 
 
